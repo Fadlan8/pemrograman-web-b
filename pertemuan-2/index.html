@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: #294fc5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background bentuk */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 600px;
+            height: 300px;
+            background: rgba(20, 55, 170, 0.25);
+            border-radius: 0 0 130px 130px;
+            top: -80px;
+            left: 250px;
+            transform: rotate(15deg);
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            width: 650px;
+            height: 380px;
+            background: rgba(20, 55, 170, 0.25);
+            border-radius: 50%;
+            right: -220px;
+            top: 80px;
+            transform: rotate(20deg);
+        }
+
+        .background-left {
+            position: absolute;
+            width: 450px;
+            height: 380px;
+            background: rgba(20, 55, 170, 0.22);
+            border-radius: 50%;
+            left: -220px;
+            bottom: -150px;
+        }
+
+        /* CONTAINER LOGIN */
+        .login-container {
+            width: 450px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ICON KERANJANG */
+        .cart-icon {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 30px;
+        }
+
+        .cart-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: white;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* INPUT */
+        .input-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-box input {
+            width: 280px;
+            height: 42px;
+            border: 1px solid white;
+            background: transparent;
+            outline: none;
+            color: white;
+            padding: 0 15px 0 42px;
+            font-size: 13px;
+        }
+
+        .input-box input::placeholder {
+            color: white;
+            opacity: 0.8;
+        }
+
+        /* ICON INPUT */
+        .input-icon {
+            position: absolute;
+            left: calc(50% - 135px);
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 15px;
+        }
+
+        /* BUTTON LOGIN */
+        .login-button {
+            width: 280px;
+            height: 42px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 3px;
+            background: white;
+            color: #294fc5;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .login-button:hover {
+            background: #eeeeee;
+        }
+
+        /* FORGOT PASSWORD */
+        .forgot {
+            display: block;
+            margin-top: 12px;
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        /* PESAN ERROR */
+        .error {
+            color: white;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background-left"></div>
+
+    <div class="login-container">
+
+        <!-- ICON KERANJANG -->
+        <div class="cart-icon">
+            <svg viewBox="0 0 64 64">
+
+                <path d="M16 18h6l5 27h20l6-20H25"></path>
+
+                <path d="M31 25l5 5 5-5"></path>
+
+                <path d="M36 30V11"></path>
+
+                <path d="M32 15l4-4 4 4"></path>
+
+                <circle cx="30" cy="53" r="2"></circle>
+
+                <circle cx="47" cy="53" r="2"></circle>
+
+            </svg>
+        </div>
+
+
+        <!-- FORM LOGIN -->
+        <form id="loginForm">
+
+            <!-- USERNAME -->
+            <div class="input-box">
+
+                <span class="input-icon">♙</span>
+
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="USERNAME"
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+            <div class="input-box">
+
+                <span class="input-icon">▣</span>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="PASSWORD"
+                >
+
+            </div>
+
+
+            <!-- LOGIN -->
+            <button type="submit" class="login-button">
+                LOGIN
+            </button>
+
+            <div id="error" class="error"></div>
+
+        </form>
+
+
+        <!-- FORGOT PASSWORD -->
+        <a href="#" class="forgot">
+            Forgot password?
+        </a>
+
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIN -->
+    <script>
+
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+
+            // Supaya halaman tidak reload
+            event.preventDefault();
+
+            // Ambil isi username dan password
+            let username = document.getElementById("username").value.trim();
+            let password = document.getElementById("password").value.trim();
+
+            let error = document.getElementById("error");
+
+
+            // Username kosong
+            if (username === "") {
+                error.innerHTML = "Username harus diisi!";
+                document.getElementById("username").focus();
+                return;
+            }
+
+
+            // Password kosong
+            if (password === "") {
+                error.innerHTML = "Password harus diisi!";
+                document.getElementById("password").focus();
+                return;
+            }
+
+
+            // Kalau username dan password sudah diisi
+            window.location.href = "home.html";
+
+        });
+
+    </script>
+
+</body>
+</html>

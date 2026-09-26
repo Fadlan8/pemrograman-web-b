@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Sidenav</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f7;
+        }
+
+        /* ================= SIDENAV ================= */
+
+        .sidenav {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+
+            width: 65px;
+            height: calc(100vh - 40px);
+
+            background: white;
+            border-radius: 8px;
+
+            padding: 15px 10px;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
+            overflow: hidden;
+
+            transition: width 0.3s ease;
+
+            z-index: 1000;
+        }
+
+        /* SAAT MOUSE DIARAHKAN */
+        .sidenav:hover {
+            width: 250px;
+        }
+
+
+        /* ================= LOGO ================= */
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            height: 40px;
+            padding-left: 9px;
+
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            min-width: 25px;
+            color: #f28c28;
+            font-size: 22px;
+        }
+
+        .logo span {
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .sidenav:hover .logo span {
+            opacity: 1;
+        }
+
+
+        /* ================= SEARCH ================= */
+
+        .search {
+            width: 220px;
+            height: 35px;
+
+            border: 1px solid #ddd;
+            border-radius: 5px;
+
+            padding: 0 10px;
+
+            outline: none;
+
+            margin-left: 5px;
+            margin-bottom: 20px;
+
+            opacity: 0;
+
+            transition: opacity 0.2s;
+        }
+
+        .sidenav:hover .search {
+            opacity: 1;
+        }
+
+
+        /* ================= MENU TITLE ================= */
+
+        .menu-title {
+            font-size: 11px;
+            color: #999;
+
+            margin: 10px;
+
+            white-space: nowrap;
+
+            opacity: 0;
+
+            transition: opacity 0.2s;
+        }
+
+        .sidenav:hover .menu-title {
+            opacity: 1;
+        }
+
+
+        /* ================= MENU ================= */
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu li {
+            margin-bottom: 5px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+
+            height: 40px;
+
+            padding: 0 10px;
+
+            text-decoration: none;
+
+            color: #555;
+
+            border-radius: 6px;
+
+            white-space: nowrap;
+
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #f1f3f6;
+        }
+
+
+        /* ICON */
+
+        .icon {
+            min-width: 25px;
+
+            text-align: center;
+
+            font-size: 17px;
+        }
+
+
+        /* TEXT MENU */
+
+        .menu a span:not(.icon):not(.plus) {
+            opacity: 0;
+
+            transition: opacity 0.2s;
+        }
+
+        .sidenav:hover .menu a span:not(.icon):not(.plus) {
+            opacity: 1;
+        }
+
+
+        /* PLUS */
+
+        .plus {
+            margin-left: auto;
+
+            opacity: 0;
+
+            transition: opacity 0.2s;
+        }
+
+        .sidenav:hover .plus {
+            opacity: 1;
+        }
+
+
+        /* ================= SUBMENU ================= */
+
+        .submenu {
+            list-style: none;
+
+            margin-left: 40px;
+
+            opacity: 0;
+
+            max-height: 0;
+
+            overflow: hidden;
+
+            transition: 0.3s;
+        }
+
+        .sidenav:hover .submenu {
+            opacity: 1;
+
+            max-height: 300px;
+        }
+
+        .submenu a {
+            height: 32px;
+
+            font-size: 12px;
+
+            padding-left: 10px;
+        }
+
+
+        /* ================= MESSAGE ================= */
+
+        .messages {
+            position: absolute;
+
+            bottom: 15px;
+
+            left: 10px;
+
+            width: 230px;
+        }
+
+        .messages a {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            height: 40px;
+
+            padding: 0 10px;
+
+            text-decoration: none;
+
+            color: #555;
+
+            white-space: nowrap;
+        }
+
+        .messages span:last-child {
+            opacity: 0;
+
+            transition: opacity 0.2s;
+        }
+
+        .sidenav:hover .messages span:last-child {
+            opacity: 1;
+        }
+
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            margin-left: 110px;
+
+            padding: 40px;
+
+            transition: margin-left 0.3s;
+        }
+
+        .content h1 {
+            font-size: 28px;
+        }
+
+        .content p {
+            margin-top: 10px;
+
+            color: #777;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDENAV -->
+
+    <div class="sidenav">
+
+        <!-- LOGO -->
+        <div class="logo">
+            <div class="logo-icon">☀</div>
+            <span>Overview</span>
+        </div>
+
+
+        <!-- SEARCH -->
+        <input
+            type="text"
+            class="search"
+            placeholder="⌕  Search"
+        >
+
+
+        <!-- MENU -->
+        <div class="menu-title">
+            My account
+        </div>
+
+
+        <ul class="menu">
+
+            <!-- HOME -->
+            <li>
+                <a href="#">
+                    <span class="icon">⌂</span>
+                    <span>Home</span>
+                </a>
+            </li>
+
+
+            <!-- DASHBOARD -->
+            <li>
+                <a href="#">
+                    <span class="icon">▦</span>
+                    <span>Dashboard</span>
+                    <span class="plus">+</span>
+                </a>
+            </li>
+
+
+            <!-- PROJECTS -->
+            <li>
+                <a href="#">
+                    <span class="icon">▣</span>
+                    <span>Projects</span>
+                    <span class="plus">+</span>
+                </a>
+            </li>
+
+
+            <!-- TASK -->
+            <li>
+                <a href="#">
+                    <span class="icon">✓</span>
+                    <span>Task</span>
+                    <span class="plus">+</span>
+                </a>
+            </li>
+
+
+            <!-- SETTINGS -->
+            <li>
+
+                <a href="#">
+                    <span class="icon">⚙</span>
+                    <span>Settings</span>
+                    <span class="plus">+</span>
+                </a>
+
+                <ul class="submenu">
+
+                    <li>
+                        <a href="#">My details</a>
+                    </li>
+
+                    <li>
+                        <a href="#">My profile</a>
+                    </li>
+
+                    <li>
+                        <a href="#">Security</a>
+                    </li>
+
+                    <li>
+                        <a href="#">Integrations</a>
+                    </li>
+
+                    <li>
+                        <a href="#">Billing</a>
+                    </li>
+
+                </ul>
+
+            </li>
+
+        </ul>
+
+
+        <!-- MESSAGE -->
+
+        <div class="messages">
+
+            <a href="#">
+                <span class="icon">✉</span>
+                <span>Messages</span>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+        <h1>Home</h1>
+
+        <p>
+            Welcome to your dashboard.
+        </p>
+
+    </div>
+
+</body>
+</html>
