@@ -1,429 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Sidenav</title>
+
+    <title>Home</title>
+
+
+    <!-- BOOTSTRAP -->
+    <link 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+    <!-- BOOTSTRAP ICON -->
+    <link 
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
 
-        body {
-            background: #f5f5f7;
-        }
+        /* SIDEBAR */
 
-        /* ================= SIDENAV ================= */
-
-        .sidenav {
-            position: fixed;
-            left: 20px;
-            top: 20px;
-
+        .sidebar {
             width: 65px;
-            height: calc(100vh - 40px);
+            height: 100vh;
 
-            background: white;
-            border-radius: 8px;
+            position: fixed;
+            top: 0;
+            left: 0;
 
-            padding: 15px 10px;
+           
 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-
+            transition: 0.3s;
             overflow: hidden;
-
-            transition: width 0.3s ease;
-
             z-index: 1000;
         }
 
-        /* SAAT MOUSE DIARAHKAN */
-        .sidenav:hover {
-            width: 250px;
+
+        /* SIDEBAR SAAT MOUSE DIARAHKAN */
+
+        .sidebar:hover {
+            width: 230px;
         }
 
-
-        /* ================= LOGO ================= */
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-
-            height: 40px;
-            padding-left: 9px;
-
-            margin-bottom: 20px;
-        }
-
-        .logo-icon {
-            min-width: 25px;
-            color: #f28c28;
-            font-size: 22px;
-        }
-
-        .logo span {
-            white-space: nowrap;
+        /* SEARCH DISEMBUNYIKAN */
+        .search-box {
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: 0.2s;
         }
 
-        .sidenav:hover .logo span {
+        /* SEARCH MUNCUL SAAT SIDEBAR DILEBARKAN */
+        .sidebar:hover .search-box {
             opacity: 1;
         }
 
 
-        /* ================= SEARCH ================= */
+        /* TEXT MENU */
 
-        .search {
-            width: 220px;
-            height: 35px;
-
-            border: 1px solid #ddd;
-            border-radius: 5px;
-
-            padding: 0 10px;
-
-            outline: none;
-
-            margin-left: 5px;
-            margin-bottom: 20px;
-
+        .menu-text {
             opacity: 0;
-
-            transition: opacity 0.2s;
-        }
-
-        .sidenav:hover .search {
-            opacity: 1;
-        }
-
-
-        /* ================= MENU TITLE ================= */
-
-        .menu-title {
-            font-size: 11px;
-            color: #999;
-
-            margin: 10px;
-
-            white-space: nowrap;
-
-            opacity: 0;
-
-            transition: opacity 0.2s;
-        }
-
-        .sidenav:hover .menu-title {
-            opacity: 1;
-        }
-
-
-        /* ================= MENU ================= */
-
-        .menu {
-            list-style: none;
-        }
-
-        .menu li {
-            margin-bottom: 5px;
-        }
-
-        .menu a {
-            display: flex;
-            align-items: center;
-
-            gap: 15px;
-
-            height: 40px;
-
-            padding: 0 10px;
-
-            text-decoration: none;
-
-            color: #555;
-
-            border-radius: 6px;
 
             white-space: nowrap;
 
             transition: 0.2s;
         }
 
-        .menu a:hover {
-            background: #f1f3f6;
+        /* TEXT MUNCUL */
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
         }
 
 
         /* ICON */
 
-        .icon {
+        .menu-icon {
             min-width: 25px;
 
-            text-align: center;
-
-            font-size: 17px;
+            font-size: 18px;
         }
 
 
-        /* TEXT MENU */
+        /* LOGO */
 
-        .menu a span:not(.icon):not(.plus) {
+        .logo-text {
             opacity: 0;
-
-            transition: opacity 0.2s;
-        }
-
-        .sidenav:hover .menu a span:not(.icon):not(.plus) {
-            opacity: 1;
-        }
-
-
-        /* PLUS */
-
-        .plus {
-            margin-left: auto;
-
-            opacity: 0;
-
-            transition: opacity 0.2s;
-        }
-
-        .sidenav:hover .plus {
-            opacity: 1;
-        }
-
-
-        /* ================= SUBMENU ================= */
-
-        .submenu {
-            list-style: none;
-
-            margin-left: 40px;
-
-            opacity: 0;
-
-            max-height: 0;
-
-            overflow: hidden;
-
-            transition: 0.3s;
-        }
-
-        .sidenav:hover .submenu {
-            opacity: 1;
-
-            max-height: 300px;
-        }
-
-        .submenu a {
-            height: 32px;
-
-            font-size: 12px;
-
-            padding-left: 10px;
-        }
-
-
-        /* ================= MESSAGE ================= */
-
-        .messages {
-            position: absolute;
-
-            bottom: 15px;
-
-            left: 10px;
-
-            width: 230px;
-        }
-
-        .messages a {
-            display: flex;
-
-            align-items: center;
-
-            gap: 15px;
-
-            height: 40px;
-
-            padding: 0 10px;
-
-            text-decoration: none;
-
-            color: #555;
 
             white-space: nowrap;
+
+            transition: 0.2s;
         }
 
-        .messages span:last-child {
-            opacity: 0;
 
-            transition: opacity 0.2s;
-        }
-
-        .sidenav:hover .messages span:last-child {
+        .sidebar:hover .logo-text {
             opacity: 1;
         }
 
 
-        /* ================= CONTENT ================= */
+        /* CONTENT */
 
         .content {
-            margin-left: 110px;
-
-            padding: 40px;
-
-            transition: margin-left 0.3s;
-        }
-
-        .content h1 {
-            font-size: 28px;
-        }
-
-        .content p {
-            margin-top: 10px;
-
-            color: #777;
+            margin-left: 65px;
         }
 
     </style>
+
 </head>
 
-<body>
 
-    <!-- SIDENAV -->
+<body class="bg-white">
 
-    <div class="sidenav">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <div class="sidebar bg-light border-end">
+
 
         <!-- LOGO -->
-        <div class="logo">
-            <div class="logo-icon">☀</div>
-            <span>Overview</span>
+
+        <div class="d-flex align-items-center gap-3 p-3">
+
+            <i class="bi bi-sun-fill text-warning fs-4"></i>
+
+            <span class="logo-text fw-bold">
+                Fadlan Olshop
+            </span>
+
         </div>
 
 
         <!-- SEARCH -->
-        <input
-            type="text"
-            class="search"
-            placeholder="⌕  Search"
-        >
 
+        <div class="search-box px-2 mt-2 mb-3">
 
-        <!-- MENU -->
-        <div class="menu-title">
-            My account
+            <input 
+                type="text"
+                class="form-control"
+                placeholder="Search">
+
         </div>
 
 
-        <ul class="menu">
+        <!-- MENU -->
+
+        <div class="px-2">
+
+
+            <small class="text-secondary menu-text">
+                My account
+            </small>
+
 
             <!-- HOME -->
-            <li>
-                <a href="#">
-                    <span class="icon">⌂</span>
-                    <span>Home</span>
-                </a>
-            </li>
+
+            <a 
+                href="home.html"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-2">
+
+                <i class="bi bi-house menu-icon"></i>
+
+                <span class="menu-text">
+                    Home
+                </span>
+
+            </a>
 
 
             <!-- DASHBOARD -->
-            <li>
-                <a href="#">
-                    <span class="icon">▦</span>
-                    <span>Dashboard</span>
-                    <span class="plus">+</span>
-                </a>
-            </li>
+
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-1">
+
+                <i class="bi bi-grid menu-icon"></i>
+
+                <span class="menu-text">
+                    Dashboard
+                </span>
+
+                <span class="menu-text ms-auto">
+                    +
+                </span>
+
+            </a>
 
 
             <!-- PROJECTS -->
-            <li>
-                <a href="#">
-                    <span class="icon">▣</span>
-                    <span>Projects</span>
-                    <span class="plus">+</span>
-                </a>
-            </li>
+
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-1">
+
+                <i class="bi bi-folder menu-icon"></i>
+
+                <span class="menu-text">
+                    Projects
+                </span>
+
+                <span class="menu-text ms-auto">
+                    +
+                </span>
+
+            </a>
 
 
             <!-- TASK -->
-            <li>
-                <a href="#">
-                    <span class="icon">✓</span>
-                    <span>Task</span>
-                    <span class="plus">+</span>
-                </a>
-            </li>
+
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-1">
+
+                <i class="bi bi-check-square menu-icon"></i>
+
+                <span class="menu-text">
+                    Task
+                </span>
+
+                <span class="menu-text ms-auto">
+                    +
+                </span>
+
+            </a>
 
 
             <!-- SETTINGS -->
-            <li>
 
-                <a href="#">
-                    <span class="icon">⚙</span>
-                    <span>Settings</span>
-                    <span class="plus">+</span>
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-1">
+
+                <i class="bi bi-gear menu-icon"></i>
+
+                <span class="menu-text">
+                    Settings
+                </span>
+
+                <span class="menu-text ms-auto">
+                    +
+                </span>
+
+            </a>
+
+
+            <!-- SUB MENU -->
+
+            <div class="ms-5 menu-text">
+
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
+
+                    My details
+
                 </a>
 
-                <ul class="submenu">
 
-                    <li>
-                        <a href="#">My details</a>
-                    </li>
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
 
-                    <li>
-                        <a href="#">My profile</a>
-                    </li>
+                    My profile
 
-                    <li>
-                        <a href="#">Security</a>
-                    </li>
+                </a>
 
-                    <li>
-                        <a href="#">Integrations</a>
-                    </li>
 
-                    <li>
-                        <a href="#">Billing</a>
-                    </li>
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
 
-                </ul>
+                    Security
 
-            </li>
+                </a>
 
-        </ul>
+
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
+
+                    Integrations
+
+                </a>
+
+
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
+
+                    Billing
+
+                </a>
+
+            </div>
+
+        </div>
 
 
         <!-- MESSAGE -->
 
-        <div class="messages">
+        <div class="position-absolute bottom-0 w-100 p-2">
 
-            <a href="#">
-                <span class="icon">✉</span>
-                <span>Messages</span>
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark p-2">
+
+                <i class="bi bi-chat menu-icon"></i>
+
+                <span class="menu-text">
+                    Messages
+                </span>
+
             </a>
 
         </div>
+
 
     </div>
 
 
     <!-- CONTENT -->
 
-    <div class="content">
+    <div class="content p-5">
 
-        <h1>Home</h1>
+        <h1 class="display-4">
+            Home
+        </h1>
 
-        <p>
-            Welcome to your dashboard.
+        <p class="text-secondary">
+            Welcome to Fadlan Olshop.
         </p>
 
     </div>
 
+
+    <!-- BOOTSTRAP JS -->
+
+    <script 
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+    </script>
+
 </body>
+
 </html>
