@@ -1,6 +1,7 @@
 <?php
 class Controller{
     public function view(string $view, array $data = []): void{
+        $data = array_merge(view_shared_data(), $data);
         extract($data);
         require_once ROOT_PATH . '/app/views/' . $view . '.php';
     }
@@ -12,4 +13,5 @@ class Controller{
     public function flash(string $type, string $message): void{
         $_SESSION['flash'] = ['type' => $type, 'message' => $message];
     }
+    protected function requireLogin(): void { Middleware::requireLogin(); }
 }

@@ -19,7 +19,7 @@ class App{
                 $this->method = $url[1]; unset($url[1]);
             } else { $this->notFound(); return; }
         }
-        $this->params = array_values($url) : [];
+        $this->params = $url ? array_values($url) : [];
         call_user_func_array([$this->controller, $this->method], $this->params);
     }
     public function parseURL(): array{
@@ -33,4 +33,5 @@ class App{
         http_response_code(404);
         echo '<h1>404 Not Found</h1>';
        
+}
 }
