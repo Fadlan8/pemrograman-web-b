@@ -25,8 +25,8 @@
                 <select name="category" class="form-select">
                     <option value="">- Semua Kategori -</option>
                     <?php foreach ($categories as $c): ?>
-                        <option value="<?= e($c['id']) ?>" <?= (string) $category === (string) $c['id'] ? 'selected' : '' ?
->>
+                        <option value="<?= e($c['id']) ?>" <?= (string) $category === (string) $c['id'] ? 'selected' : '' ?>
+                            
                             <?= e($c['name']) ?>
                         </option>
                     <?php endforeach; ?>

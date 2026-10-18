@@ -15,6 +15,10 @@ rel="stylesheet">
     </style>
 </head>
 <body class="bg-light">
+<main class="container py-4">
+    <?php if ($flash): ?>
+        <div class="alert alert-<?= e($flash['type']) ?>"><?= e($flash['message']) ?></div>
+    <?php endif; ?>
 <?php if ($loggedIn): ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">

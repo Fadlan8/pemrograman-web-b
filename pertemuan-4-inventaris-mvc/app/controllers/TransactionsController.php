@@ -1,19 +1,64 @@
 <?php
-class TransactionsController extends Controller{
-    public function stockIn(): void  { $this->store('IN',  'Barang masuk berhasil dicatat!'); }
-    public function stockOut(): void { $this->store('OUT', 'Barang keluar berhasil dicatat!'); }
-    private function store(string $type, string $msg): void {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') $this->redirect('transactions');
-        $itemId = (int)($_POST['item_id'] ?? 0);
-        $qty    = (int)($_POST['quantity'] ?? 0);
-        if ($itemId <= 0 || $qty <= 0) { $this->flash('danger', 'Data tidak valid.'); $this->redirect('items'); }
+class TransactionsController extends Controller {
+   public function index(): void {
+        // Tangkap limit dari URL atau beri nilai default 10
+        $currentLimit = $_GET['limit'] ?? 10;
         
-        $ok = $this->model('Transaction')->create([
-            'item_id' => $itemId, 'user_id' => $_SESSION['user']['id'],
-            'type' => $type, 'quantity' => $qty, 'notes' => trim($_POST['notes'] ?? '') ?: null,
+        // Ambil semua data transaksi
+        $data = $this->model('Transaction')->all();
+
+        $this->view('transactions/index', [
+            'title' => 'Riwayat Transaksi',
+            // Bungkus data array agar sesuai dengan ekspektasi view paginasi
+            'transactions' => [
+                'data' => $data,
+                'total_pages' => 1,
+                'total_data' => count($data),
+                'current_page' => 1
+            ],
+            'currentLimit' => $currentLimit
         ]);
-        $this->flash($ok ? 'success' : 'danger',
-            $ok ? $msg : 'Gagal. Stok tidak mencukupi.');
-        $this->redirect('items');
+    }
+
+    public function create(): void {
+        $this->view('transactions/create', [
+            'title' => 'Catat Transaksi',
+            'items' => $this->model('Item')->all()
+        ]);
+    }
+
+    public function store(): void {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') $this->redirect('transactions');
+        
+        $item_id = (int)$_POST['item_id'];
+        $type = $_POST['type'];
+        $quantity = (int)$_POST['quantity'];
+        
+        // Validasi khusus Barang Keluar (Stok tidak boleh minus)
+        if ($type === 'OUT') {
+            $item = $this->model('Item')->find($item_id);
+            if ($item['quantity'] < $quantity) {
+                $this->flash('danger', 'Gagal! Stok barang tidak mencukupi untuk dikeluarkan.');
+                $this->redirect('transactions/create');
+                return;
+            }
+        }
+
+        $data = [
+            'item_id' => $item_id,
+            'user_id' => 1, // Hardcode ID admin sementara sampai Langkah 10 selesai
+            'type' => $type,
+            'quantity' => $quantity,
+            'notes' => trim($_POST['notes'])
+        ];
+
+        try {
+            $this->model('Transaction')->createTransaction($data);
+            $this->flash('success', 'Transaksi berhasil disimpan dan stok otomatis diperbarui.');
+        } catch (Exception $e) {
+            $this->flash('danger', 'Terjadi kesalahan sistem: ' . $e->getMessage());
+        }
+        
+        $this->redirect('transactions');
     }
 }

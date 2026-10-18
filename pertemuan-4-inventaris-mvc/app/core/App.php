@@ -15,7 +15,7 @@ class App{
         $this->controller = new $this->controller;
 
         if(!empty($url[1])){
-            if(method_exists(this->controller, $url[1])){
+            if(method_exists($this->controller, $url[1])){
                 $this->method = $url[1]; unset($url[1]);
             } else { $this->notFound(); return; }
         }
@@ -33,5 +33,5 @@ class App{
         http_response_code(404);
         echo '<h1>404 Not Found</h1>';
        
-}
+    }
 }
