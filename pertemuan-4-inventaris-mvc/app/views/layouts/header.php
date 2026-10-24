@@ -1,4 +1,4 @@
-<?php $flash = take_flash(); ?>
+<?php $flash = take_flash(); $loggedIn = isset($_SESSION['user_id']); ?>
 <<!DOCTYPE html>
 <html lang="id">
 <head>

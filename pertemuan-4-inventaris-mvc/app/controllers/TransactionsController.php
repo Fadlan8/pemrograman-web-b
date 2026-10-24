@@ -1,5 +1,8 @@
 <?php
 class TransactionsController extends Controller {
+    public function __construct() {
+        $this->requireLogin();
+    }
    public function index(): void {
         // Tangkap limit dari URL atau beri nilai default 10
         $currentLimit = $_GET['limit'] ?? 10;

@@ -1,5 +1,8 @@
 <?php
 class ItemsController extends Controller{
+    public function __construct() {
+        $this->requireLogin();
+    }
     public function index(): void{
         //kita siapkan data dasar dulu untuk index
         $search = $_GET['search'] ?? '';
