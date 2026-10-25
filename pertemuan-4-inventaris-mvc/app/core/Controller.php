@@ -6,7 +6,7 @@ class Controller{
         require_once ROOT_PATH . '/app/views/' . $view . '.php';
     }
     public function model(string $model){return new $model();}
-    public function redirect(string $url): void{
+    public function redirect(string $path): void{
         header('Location: ' . BASEURL . '/' . ltrim($path, '/'));
         exit;
     }

@@ -29,7 +29,10 @@ class CategoriesController extends Controller{
     }
     public function edit(int $id): void {
         $category = $this->model('Category')->find($id);
-        if (!$category) $this->redirect('categories');
+        if (!$category){
+             $this->flash('danger', 'Kategori tidak ditemukan.');
+             $this->redirect('categories');
+        }
         $this->view('categories/edit', [
             'title' => 'Edit Kategori',
             'category' => $category

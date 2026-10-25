@@ -1,76 +1,133 @@
 <?php
 class ItemsController extends Controller{
+    private const LIMITS = [5, 10, 20, 50, 100];
     public function __construct() {
         $this->requireLogin();
     }
-    public function index(): void{
-        //kita siapkan data dasar dulu untuk index
-        $search = $_GET['search'] ?? '';
-        $category = $_GET['category']  ?? '';
-        $currentLimit = (int)($_GET['limit'] ?? 10);
+    public function index(): void
+    {
+        $limit = (int) $this->queryParam('limit');
+        if (!in_array($limit, self::LIMITS, true)) {
+            $limit = 10;
+        }
+        $page = max(1, (int) $this->queryParam('page'));
+        $search = $this->queryParam('search');
+        $category = $this->queryParam('category');
+
+        $result = $this->model('Item')->paginate($limit, $page, $search, $category);
 
         $this->view('items/index', [
             'title' => 'Data Barang',
-            'items' => ['data' => $this->model('Item')->all(), 'total_pages' => 1, 'current_page' => 1, 'total_data' => 0], //sederhana dulu sebelum painasi di langkah 11
-            'categories' => $this->model('Category')->all(),
+            'items' => $result['data'],
+            'page' => $result['current_page'],
+            'totalPages' => $result['total_pages'],
+            'totalData' => $result['total_data'],
+            'limit' => $limit,
+            'limits' => self::LIMITS,
             'search' => $search,
             'category' => $category,
-            'currentLimit' => $currentLimit
+            'categories' => $this->model('Category')->all(),
         ]);
     }
 
-    public function create(): void{
+    public function create(): void
+    {
         $this->view('items/create', [
             'title' => 'Tambah Barang',
-            'code' => $this->model('Item')->generateCode(),
-            'categories' => $this->model('Category')->all()
+            'item' => ['code' => $this->model('Item')->generateCode()],
+            'categories' => $this->model('Category')->all(),
         ]);
     }
-    private function payload(array $input): array {
-        return [
-        'code' => $input['code'],
-        'name' => $input['name'],
-        'category_id' => ($input['category_id'] ?? '') !== '' ? (int)$input['category_id'] : null,
-            'quantity'    => (int)($input['quantity'] ?? 0),
-            'unit'        => $input['unit'] ?: 'unit',
-            'price'       => (float)($input['price'] ?? 0),
-            'entry_date'  => ($input['entry_date'] ?? '') !== '' ? $input['entry_date'] : null,
-            'description' => $input['description'] ?? '',
-        ];
-    }
-    public function store(): void{
+
+    public function store(): void
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') $this->redirect('items');
         $input = array_map('trim', $_POST);
-
-        $this->model('Item')->create($this->payload($input));
+        $error = $this->validationError($input);
+        if ($error) {
+            $this->flash('danger', $error);
+            $this->redirect('items/create');
+        }
+        try {
+            $this->model('Item')->create($this->payload($input));
+        } catch (PDOException $e) {
+            $this->flash('danger', 'Gagal menyimpan. Kode barang mungkin sudah dipakai.');
+            $this->redirect('items/create');
+        }
         $this->flash('success', 'Barang berhasil ditambahkan.');
         $this->redirect('items');
     }
-    public function edit(int $id): void {
-        $item = $this->model('Item')->find($id);
-        if (!$item) $this->redirect('items');
+
+    public function edit($id = 0): void
+    {
+        $item = $this->model('Item')->find((int) $id);
+        if (!$item) {
+            $this->flash('danger', 'Barang tidak ditemukan.');
+            $this->redirect('items');
+        }
         $this->view('items/edit', [
-            'title' => 'Edit Barang',
+            'title' => 'Ubah Barang',
             'item' => $item,
-            'categories' => $this->model('Category')->all()
+            'categories' => $this->model('Category')->all(),
         ]);
     }
 
-    public function update(): void {
+    public function update($id = 0): void
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') $this->redirect('items');
-        $id = (int)$_POST['id'];
+        $id = (int) $id;
         $input = array_map('trim', $_POST);
-        
-        $this->model('Item')->update($id, $this->payload($input));
+        $error = $this->validationError($input);
+        if ($error) {
+            $this->flash('danger', $error);
+            $this->redirect('items/edit/' . $id);
+        }
+        try {
+            $this->model('Item')->update($id, $this->payload($input));
+        } catch (PDOException $e) {
+            $this->flash('danger', 'Gagal menyimpan. Kode barang mungkin sudah dipakai.');
+            $this->redirect('items/edit/' . $id);
+        }
         $this->flash('success', 'Barang berhasil diperbarui.');
         $this->redirect('items');
     }
-    
-    public function delete(int $id): void {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->model('Item')->delete($id);
-            $this->flash('success', 'Barang berhasil dihapus.');
-        }
+
+    public function delete($id = 0): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') $this->redirect('items');
+        $this->model('Item')->delete((int) $id);
+        $this->flash('success', 'Barang berhasil dihapus.');
         $this->redirect('items');
+    }
+
+    private function validationError(array $input): ?string
+    {
+        if (($input['code'] ?? '') === '' || ($input['name'] ?? '') === '') {
+            return 'Kode dan nama barang wajib diisi.';
+        }
+        if ((int) ($input['quantity'] ?? 0) < 0 || (float) ($input['price'] ?? 0) < 0) {
+            return 'Stok dan harga tidak boleh negatif.';
+        }
+        return null;
+    }
+
+    private function payload(array $input): array
+    {
+        return [
+            'code' => $input['code'],
+            'name' => $input['name'],
+            'category_id' => ($input['category_id'] ?? '') !== '' ? (int)$input['category_id'] : null,
+            'quantity' => (int)($input['quantity'] ?? 0),
+            'unit' => $input['unit'] ?: 'unit',
+            'price' => (float)($input['price'] ?? 0),
+            'entry_date' => ($input['entry_date'] ?? '') !== '' ? $input['entry_date'] : null,
+            'description' => $input['description'] ?? '',
+        ];
+    }
+
+    private function queryParam(string $key): string
+    {
+        $value = $_GET[$key] ?? '';
+        return is_string($value) ? trim($value) : '';
     }
 }

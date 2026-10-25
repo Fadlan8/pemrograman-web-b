@@ -5,6 +5,7 @@ class App{
     protected array $params = [];
     public function __construct(){
         $url = $this->parseURL();
+
         if(!empty($url[0])){
             $candidate = ucfirst($url[0]) . 'Controller';
             if (file_exists(ROOT_PATH . '/app/controllers/' . $candidate . '.php')) {
@@ -31,7 +32,8 @@ class App{
     }
     private function notFound(): void{
         http_response_code(404);
-        echo '<h1>404 Not Found</h1>';
+        $title = 'Halaman Tidak Ditemukan';
+        require ROOT_PATH . '/app/views/errors/404.php';
        
     }
 }
