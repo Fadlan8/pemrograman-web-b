@@ -11,10 +11,11 @@ class Logger
         }
         file_put_contents(
             self::$logDir . '/error-' . date('YmdHis') . '.json',
-            json_encode(
-                ['timestamp' => date('Y-m-d H:i:s'), 'message' => $message, 'context' => $context],
-                JSON_PRETTY_PRINT
-            )
+            json_encode([
+                'timestamp' => date('Y-m-d H:i:s'),
+                'message' => $message,
+                'context' => $context,
+            ], JSON_PRETTY_PRINT)
         );
     }
 }

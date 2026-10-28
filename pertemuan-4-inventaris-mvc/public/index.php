@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../app/config/config.php';
 require_once __DIR__ . '/../app/core/helpers.php';
 
@@ -13,16 +14,16 @@ spl_autoload_register(function ($class) {
 });
 
 // Fallback jika rewrite .htaccess tidak tersedia (PHP built-in server),
-// sekaligus menangani subfolder, mis. http://localhost/inventaris-mvc/public/.
+// sekaligus menangani subfolder, mis. http://localhost/inventaris-mvc/public/
 if (!isset($_GET['url'])) {
-    $url = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
     $basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-    if ($basePath !== '/' && $basePath !== '' && str_starts_with($url, $basePath)) {
-        $url = substr($url, strlen($basePath));
+    if ($basePath !== '/' && $basePath !== '' && str_starts_with($uri, $basePath)) {
+        $uri = substr($uri, strlen($basePath));
     }
-    $_GET['url'] = trim((string)$url, '/');
+    $_GET['url'] = trim((string) $uri, '/');
 }
 
 session_start();
-$app = new App();
 
+$app = new App();

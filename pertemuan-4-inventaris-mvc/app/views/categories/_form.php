@@ -1,10 +1,11 @@
 <?php $value = fn(string $key, $default = '') => e($category[$key] ?? $default); ?>
-    <div class="mb-3">
+<div class="row g-3">
+    <div class="col-md-6">
         <label class="form-label">Nama Kategori <span class="text-danger">*</span></label>
-         <input type="text" id="name" name="name" class="form-control" maxlength="100" required
-            value="<?=$value('name') ?>">
+        <input type="text" name="name" class="form-control" value="<?= $value('name') ?>" required>
     </div>
-    <div class="mb-3">
-            <label for="description" class="form-label">Deskripsi</label>
-          <textarea id="description" name="description" class="form-control" rows="3"><?= e($category['description'] ?? '') ?></textarea>
+    <div class="col-12">
+        <label class="form-label">Deskripsi</label>
+        <textarea name="description" rows="3" class="form-control"><?= $value('description') ?></textarea>
     </div>
+</div>
