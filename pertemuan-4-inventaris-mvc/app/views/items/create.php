@@ -13,6 +13,7 @@
 <div class="card border-0 shadow-sm">
     <div class="card-body">
         <form action="<?= BASEURL ?>/items/store" method="post">
+            <?= Security::csrfField() ?>
             <?php require ROOT_PATH . '/app/views/items/_form.php'; ?>
             <div class="mt-4">
                 <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Simpan</button>

@@ -15,6 +15,7 @@
 <div class="card border-0 shadow-sm">
     <div class="card-body">
         <form action="<?= BASEURL ?>/items" method="get" class="row g-2 mb-3">
+            <?= Security::csrfField() ?>
             <div class="col-sm-5 col-md-4">
                 <input type="text" name="search" class="form-control" placeholder="Cari kode / nama / kategori..." value="<?= e($search) ?>">
             </div>

@@ -14,6 +14,7 @@
 <div class="card border-0 shadow-sm">
     <div class="card-body">
         <form action="<?= BASEURL ?>/categories/update" method="post">
+            <?= Security::csrfField() ?>
             <input type="hidden" name="id" value="<?= e($category['id']) ?>">
             <?php require ROOT_PATH . '/app/views/categories/_form.php'; ?>
             <div class="mt-4">

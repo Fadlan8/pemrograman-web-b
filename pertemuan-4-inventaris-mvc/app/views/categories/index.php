@@ -30,6 +30,7 @@
                                 <td class="text-center">
                                     <a href="<?= BASEURL ?>/categories/edit/<?= e($row['id']) ?>" class="btn btn-sm btn-outline-warning" title="Edit"><i class="bi bi-pencil"></i></a>
                                     <form action="<?= BASEURL ?>/categories/delete/<?= e($row['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Hapus kategori ini?')">
+                                        <?= Security::csrfField() ?>
                                         <button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="bi bi-trash"></i></button>
                                     </form>
                                 </td>

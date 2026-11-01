@@ -12,6 +12,7 @@
             <div class="card-body p-4">
                 <h5 class="mb-4 text-center">Login ke Akun Anda</h5>
                 <form method="post" action="<?= BASEURL ?>/auth/authenticate">
+                    <?= Security::csrfField() ?>
                     <div class="mb-3">
                         <label class="form-label">Username</label>
                         <div class="input-group">
