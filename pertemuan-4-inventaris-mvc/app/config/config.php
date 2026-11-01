@@ -35,6 +35,6 @@ define('DB_PORT', env('DB_PORT', '3306'));
 define('DB_NAME', env('DB_NAME', 'db_inventory'));
 define('DB_USER', env('DB_USER', 'root'));
 define('DB_PASS', env('DB_PASS', ''));
-define('BASEURL', rtrim(env('BASE_URL', 'http://localhost:8000'), '/'));
+define('BASEURL', rtrim(env('BASE_URL', 'http://localhost/pemrograman-web-b/pertemuan-4-inventaris-mvc/public'), '/'));
 
 date_default_timezone_set(env('APP_TIMEZONE', 'Asia/Jakarta'));

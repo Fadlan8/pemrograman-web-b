@@ -61,7 +61,7 @@ http://localhost/inventaris-mvc/public
 ## 5. Login demo
 
 - Username: `admin` — password: `123456`
-- Username: `manager` — password: `123456`
+- Username: `manager` — password: `123`
 - Username: `staff` — password: `123456`
 
 Tanpa login, akses ke dashboard, barang, kategori, transaksi, dan

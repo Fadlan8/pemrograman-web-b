@@ -2,6 +2,10 @@
 
 class AuthController extends Controller
 {
+    public function index() {
+        // Tampilkan view login atau proses default
+        echo "Halaman Login";
+    }
     public function login(): void
     {
         $this->view('auth/login', ['title' => 'Login']);
