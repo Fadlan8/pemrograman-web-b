@@ -1,4 +1,5 @@
 <?php require ROOT_PATH . '/app/views/layouts/header.php'; ?>
+<?= csrf_field() ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>

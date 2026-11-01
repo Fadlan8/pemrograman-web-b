@@ -1,4 +1,5 @@
 <?php require ROOT_PATH . '/app/views/layouts/header.php'; ?>
+<?= csrf_field() ?>
 
 <div class="row justify-content-center" style="margin-top: 8vh;">
     <div class="col-md-5 col-lg-4">

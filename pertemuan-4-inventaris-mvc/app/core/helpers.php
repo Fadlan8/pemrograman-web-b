@@ -49,3 +49,22 @@ function view_shared_data(): array
         ],
     ];
 }
+function csrf_field(): string
+{
+    return Security::csrfField();
+}
+function asset(?string $path): string
+{
+    return $path ? BASEURL . '/' . ltrim($path, '/') : '';
+}
+function tanggal($value, bool $withTime = false): string
+{
+    if (!$value) {
+        return '-';
+    }
+    $timestamp = strtotime((string) $value);
+    if ($timestamp === false) {
+        return '-';
+    }
+    return date($withTime ? 'd/m/Y H:i' : 'd/m/Y', $timestamp);
+}

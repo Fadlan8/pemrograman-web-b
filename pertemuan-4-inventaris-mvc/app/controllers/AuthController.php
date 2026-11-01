@@ -18,9 +18,11 @@ class AuthController extends Controller
         }
         $username = trim($_POST['username'] ?? '');
         $password = $_POST['password'] ?? '';
+
         $user = $this->model('User')->login($username, $password);
         if ($user) {
-            $_SESSION['user'] = $user;
+            Security::loginUser($user);
+            $this->model('User')->touchLogin((int) $user['id']);
             $this->flash('success', 'Selamat datang, ' . $user['full_name'] . '!');
             $this->redirect('dashboard');
         }
@@ -30,8 +32,8 @@ class AuthController extends Controller
 
     public function logout(): void
     {
-        unset($_SESSION['user']);
-        session_destroy();
-        $this->redirect('auth/login');
+        Security::logout();
+        header('Location: ' . BASEURL . '/auth/login');
+        exit;
     }
 }
