@@ -1,2 +1,7 @@
 .env
 logs/
+public/uploads/items/*
+!public/uploads/items/.gitkeep
+touch public/uploads/items/.gitkeep
+git add .gitignore public/uploads/items/.gitkeep
+git commit -m "chore: siapkan branch dan folder pengembangan lanjuan"

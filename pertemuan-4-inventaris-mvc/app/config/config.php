@@ -38,3 +38,10 @@ define('DB_PASS', env('DB_PASS', ''));
 define('BASEURL', rtrim(env('BASE_URL', 'http://localhost/pemrograman-web-b/pertemuan-4-inventaris-mvc/public'), '/'));
 
 date_default_timezone_set(env('APP_TIMEZONE', 'Asia/Jakarta'));
+
+define('SESSION_IDLE_TIMEOUT', ((int) env('SESSION_IDLE_TIMEOUT', 30)) * 60);
+define('UPLOAD_MAX_BYTES', ((int) env('UPLOAD_MAX_MB', 2)) * 1024 * 1024);
+
+define('API_ALLOWED_ORIGIN', env('API_ALLOWED_ORIGIN', '*'));
+define('API_DEFAULT_LIMIT', (int) env('API_DEFAULT_LIMIT', 10));
+
