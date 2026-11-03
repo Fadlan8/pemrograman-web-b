@@ -9,6 +9,7 @@ class TransactionsController extends Controller
 
     public function index(): void
     {
+        $this->authorize('transactions.view');
         $limit = (int) ($_GET['limit'] ?? 10);
         if (!in_array($limit, [5, 10, 20, 50, 100], true)) {
             $limit = 10;
@@ -23,11 +24,13 @@ class TransactionsController extends Controller
 
     public function stockIn(): void
     {
+        $this->authorize('transactions.create');
         $this->store('IN', 'Barang masuk berhasil dicatat!');
     }
 
     public function stockOut(): void
     {
+        $this->authorize('transactions.create');
         $this->store('OUT', 'Barang keluar berhasil dicatat!');
     }
 

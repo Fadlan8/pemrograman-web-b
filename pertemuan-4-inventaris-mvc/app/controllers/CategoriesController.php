@@ -9,6 +9,7 @@ class CategoriesController extends Controller
 
     public function index(): void
     {
+        $this->authorize('categories.view');
         $this->view('categories/index', [
             'title' => 'Data Kategori',
             'categories' => $this->model('Category')->all(),
@@ -17,6 +18,7 @@ class CategoriesController extends Controller
 
     public function create(): void
     {
+        $this->authorize('categories.manage');
         $this->view('categories/create', [
             'title' => 'Tambah Kategori',
             'category' => [],
@@ -25,6 +27,7 @@ class CategoriesController extends Controller
 
     public function store(): void
     {
+        $this->authorize('categories.manage');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('categories');
         }
@@ -43,6 +46,7 @@ class CategoriesController extends Controller
 
     public function edit($id): void
     {
+        $this->authorize('categories.manage');
         $category = $this->model('Category')->find((int) $id);
         if (!$category) {
             $this->flash('danger', 'Kategori tidak ditemukan.');
@@ -56,6 +60,7 @@ class CategoriesController extends Controller
 
     public function update(): void
     {
+        $this->authorize('categories.manage');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('categories');
         }
@@ -75,6 +80,7 @@ class CategoriesController extends Controller
 
     public function delete($id): void
     {
+        $this->authorize('categories.manage');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('categories');
         }

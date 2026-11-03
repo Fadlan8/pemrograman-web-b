@@ -1,5 +1,12 @@
 <?php require ROOT_PATH . '/app/views/layouts/header.php'; ?>
 <?= csrf_field() ?>
+<?php
+$canCreateItem = can('items.create');
+$canAdjustStock = can('transactions.create');
+$canUpdateItems = can('items.update');
+$canDeleteItems = can('items.delete');
+$showItemActions = $canAdjustStock || $canUpdateItems || $canDeleteItems;
+?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
@@ -7,8 +14,12 @@
         <small class="text-muted">Kelola seluruh data inventaris barang</small>
     </div>
     <div class="d-flex gap-2">
-        <a href="<?= BASEURL ?>/transactions" class="btn btn-outline-info"><i class="bi bi-clock-history"></i> Riwayat</a>
-        <a href="<?= BASEURL ?>/items/create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Tambah Barang</a>
+        <?php if (can('transactions.view')): ?>
+            <a href="<?= BASEURL ?>/transactions" class="btn btn-outline-info"><i class="bi bi-clock-history"></i> Riwayat</a>
+        <?php endif; ?>
+        <?php if ($canCreateItem): ?>
+            <a href="<?= BASEURL ?>/items/create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Tambah Barang</a>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -59,11 +70,11 @@
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
-                    <tr><th>#</th><th>Kode</th><th>Nama Barang</th><th>Kategori</th><th class="text-center">Stok</th><th class="text-end">Harga</th><th class="text-center" style="width:190px;">Aksi</th></tr>
+                    <tr><th>#</th><th>Kode</th><th>Nama Barang</th><th>Kategori</th><th class="text-center">Stok</th><th class="text-end">Harga</th><?php if ($showItemActions): ?><th class="text-center" style="width:190px;">Aksi</th><?php endif; ?></tr>
                 </thead>
                 <tbody>
                     <?php if (empty($items['data'])): ?>
-                        <tr><td colspan="7" class="text-center text-muted py-4">Belum ada data barang.</td></tr>
+                        <tr><td colspan="<?= $showItemActions ? 7 : 6 ?>" class="text-center text-muted py-4">Belum ada data barang.</td></tr>
                     <?php else: ?>
                         <?php $no = ($items['current_page'] - 1) * $currentLimit + 1; foreach ($items['data'] as $row): ?>
                             <tr>
@@ -78,20 +89,28 @@
                                     <?php endif; ?>
                                 </td>
                                 <td class="text-end"><?= rupiah($row['price']) ?></td>
-                                <td class="text-center">
+                                <?php if ($showItemActions): ?>
+                                    <td class="text-center">
                                     <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-outline-success" title="Barang Masuk" data-bs-toggle="modal" data-bs-target="#stockInModal" onclick='setStockItem(<?= json_encode($row, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                                            <i class="bi bi-box-arrow-in-down"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-outline-danger" title="Barang Keluar" data-bs-toggle="modal" data-bs-target="#stockOutModal" onclick='setStockItem(<?= json_encode($row, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                                            <i class="bi bi-box-arrow-up"></i>
-                                        </button>
-                                        <a href="<?= BASEURL ?>/items/edit/<?= e($row['id']) ?>" class="btn btn-outline-warning" title="Edit"><i class="bi bi-pencil"></i></a>
-                                        <form action="<?= BASEURL ?>/items/delete/<?= e($row['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Hapus barang ini?')">
-                                            <button class="btn btn-outline-secondary" title="Hapus"><i class="bi bi-trash"></i></button>
-                                        </form>
+                                        <?php if ($canAdjustStock): ?>
+                                            <button type="button" class="btn btn-outline-success" title="Barang Masuk" data-bs-toggle="modal" data-bs-target="#stockInModal" onclick='setStockItem(<?= json_encode($row, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                                <i class="bi bi-box-arrow-in-down"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger" title="Barang Keluar" data-bs-toggle="modal" data-bs-target="#stockOutModal" onclick='setStockItem(<?= json_encode($row, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                                <i class="bi bi-box-arrow-up"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                        <?php if ($canUpdateItems): ?>
+                                            <a href="<?= BASEURL ?>/items/edit/<?= e($row['id']) ?>" class="btn btn-outline-warning" title="Edit"><i class="bi bi-pencil"></i></a>
+                                        <?php endif; ?>
+                                        <?php if ($canDeleteItems): ?>
+                                            <form action="<?= BASEURL ?>/items/delete/<?= e($row['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Hapus barang ini?')">
+                                                <button class="btn btn-outline-secondary" title="Hapus"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        <?php endif; ?>
                                     </div>
-                                </td>
+                                    </td>
+                                <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -124,6 +143,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="<?= BASEURL ?>/transactions/stockIn" method="post">
+                <?= csrf_field() ?>
                 <div class="modal-header bg-success text-white">
                     <h5 class="modal-title"><i class="bi bi-box-arrow-in-down"></i> Barang Masuk</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -155,6 +175,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="<?= BASEURL ?>/transactions/stockOut" method="post">
+                <?= csrf_field() ?>
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title"><i class="bi bi-box-arrow-up"></i> Barang Keluar</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>

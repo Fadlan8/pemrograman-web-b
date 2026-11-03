@@ -9,6 +9,7 @@ class ItemsController extends Controller
 
     public function index(): void
     {
+        $this->authorize('items.view');
         $limit = (int) ($_GET['limit'] ?? 10);
         if (!in_array($limit, [5, 10, 20, 50, 100], true)) {
             $limit = 10;
@@ -29,6 +30,7 @@ class ItemsController extends Controller
 
     public function create(): void
     {
+         $this->authorize('items.create');
         $this->view('items/create', [
             'title' => 'Tambah Barang',
             'item' => [],
@@ -39,6 +41,7 @@ class ItemsController extends Controller
 
     public function store(): void
     {
+         $this->authorize('items.create');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('items');
         }
@@ -54,6 +57,7 @@ class ItemsController extends Controller
 
     public function edit($id): void
     {
+        $this->authorize('items.update');
         $item = $this->model('Item')->find((int) $id);
         if (!$item) {
             $this->flash('danger', 'Barang tidak ditemukan.');
@@ -68,6 +72,7 @@ class ItemsController extends Controller
 
     public function update(): void
     {
+        $this->authorize('items.update');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('items');
         }
@@ -84,6 +89,7 @@ class ItemsController extends Controller
 
     public function delete($id): void
     {
+        $this->authorize('items.delete');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('items');
         }
