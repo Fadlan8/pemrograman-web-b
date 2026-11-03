@@ -17,6 +17,11 @@ $showItemActions = $canAdjustStock || $canUpdateItems || $canDeleteItems;
         <?php if (can('transactions.view')): ?>
             <a href="<?= BASEURL ?>/transactions" class="btn btn-outline-info"><i class="bi bi-clock-history"></i> Riwayat</a>
         <?php endif; ?>
+        <?php if (can('items.restore')): ?>
+            <a href="<?= BASEURL ?>/items/trash" class="btn btn-outline-secondary">
+                <i class="bi bi-trash"></i> Sampah
+            </a>
+        <?php endif; ?>
         <?php if ($canCreateItem): ?>
             <a href="<?= BASEURL ?>/items/create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Tambah Barang</a>
         <?php endif; ?>

@@ -7,6 +7,14 @@ class Transaction extends Model
     public function create(array $data): bool
     {
         try {
+            $itemCheck = $this->db->prepare(
+            "SELECT id FROM items WHERE id = ? AND deleted_at IS NULL LIMIT 1"
+            );
+            $itemCheck->execute([(int) $data['item_id']]);
+
+            if (!$itemCheck->fetchColumn()) {
+            return false; // Batalkan transaksi jika barang tidak ditemukan atau sudah dihapus
+            }
             $this->db->beginTransaction();
 
             $this->db->prepare(

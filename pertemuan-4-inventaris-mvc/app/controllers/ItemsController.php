@@ -87,15 +87,58 @@ class ItemsController extends Controller
         $this->redirect('items');
     }
 
-    public function delete($id): void
+    /**
+     * Soft-delete an item (data stays recoverable).
+     */
+    public function delete($id = null): void
     {
         $this->authorize('items.delete');
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!$id) {
             $this->redirect('items');
         }
-        $this->model('Item')->delete((int) $id);
-        $this->flash('success', 'Barang berhasil dihapus.');
+        $item = $this->item->find((int) $id);
+        if ($item && $this->item->softDelete((int) $id)) {
+            $this->flash('success', 'Barang dipindahkan ke sampah (soft delete).');
+        } else {
+            $this->flash('danger', 'Barang gagal dihapus.');
+        }
         $this->redirect('items');
+    }
+    /**
+     * Trash bin (administrators only may restore).
+     */
+    public function trash(): void
+    {
+        $this->authorize('items.restore');
+        $search = query_param('search');
+        $categoryId = query_param('category');
+        $page = max(1, (int) query_param('page', '1'));
+        $limit = $this->resolveLimit();
+        $this->view('items/trash', [
+            'title'        => 'Sampah Barang',
+            'items'        => $this->item->paginate($limit, $page, $search, $categoryId, true),
+            'categories'   => $this->category->all(),
+            'search'       => $search,
+            'category'     => $categoryId,
+            'currentLimit' => $limit,
+        ]);
+    }
+    /**
+     * Restore a soft-deleted item.
+     */
+    public function restore($id = null): void
+    {
+        $this->authorize('items.restore');
+        if (!$id || !$this->item->find((int) $id, true)) {
+            $this->flash('danger', 'Barang tidak ditemukan di sampah.');
+            $this->redirect('items/trash');
+        }
+        if ($this->item->restore((int) $id)) {
+            $this->flash('success', 'Barang berhasil dipulihkan.');
+        } else {
+            $this->flash('danger', 'Barang gagal dipulihkan.');
+        }
+        $this->redirect('items/trash');
     }
 
     private function payload(array $input): array
