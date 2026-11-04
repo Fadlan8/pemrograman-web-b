@@ -42,4 +42,22 @@ $selectedCategory = $item['category_id'] ?? '';
         <label class="form-label">Keterangan</label>
         <textarea name="description" rows="3" class="form-control"><?= $value('description') ?></textarea>
     </div>
+    <div class="col-12">
+    <label class="form-label">Foto Barang</label>
+    <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" class="form-control">
+    <small class="text-muted">Format JPG, PNG, atau WEBP. Maksimal 2 MB.</small>
+    <?php if (!empty($item['photo'])): ?>
+        <div class="d-flex align-items-center gap-3 mt-3">
+            <img src="<?= e(asset($item['photo'])) ?>" alt="Foto barang"
+                 class="rounded border" style="width: 96px; height: 96px; object-fit: cover;">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="remove_photo"
+                       value="1" id="remove_photo">
+                <label class="form-check-label" for="remove_photo">
+                    Hapus foto saat menyimpan
+                </label>
+            </div>
+        </div>
+    <?php endif; ?>
+    </div>
 </div>

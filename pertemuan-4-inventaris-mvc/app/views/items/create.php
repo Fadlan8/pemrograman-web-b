@@ -12,7 +12,7 @@
 
 <div class="card border-0 shadow-sm">
     <div class="card-body">
-        <form action="<?= BASEURL ?>/items/store" method="post">
+        <form action="<?= BASEURL ?>/items/store" method="post" enctype="multipart/form-data" >
             <?= Security::csrfField() ?>
             <?php require ROOT_PATH . '/app/views/items/_form.php'; ?>
             <div class="mt-4">

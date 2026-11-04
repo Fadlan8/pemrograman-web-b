@@ -37,8 +37,8 @@ class Item extends Model
     public function create(array $data): bool
     {
         return $this->db->prepare(
-            "INSERT INTO items (code, name, category_id, quantity, unit, price, entry_date, description)
-             VALUES (:code, :name, :category_id, :quantity, :unit, :price, :entry_date, :description)"
+            "INSERT INTO items (code, name, category_id, quantity, unit, price, entry_date, description, photo)
+             VALUES (:code, :name, :category_id, :quantity, :unit, :price, :entry_date, :description, :photo)"
         )->execute($data);
     }
 
@@ -47,7 +47,7 @@ class Item extends Model
         $data['id'] = $id;
         return $this->db->prepare(
             "UPDATE items SET code = :code, name = :name, category_id = :category_id, quantity = :quantity,
-             unit = :unit, price = :price, entry_date = :entry_date, description = :description WHERE id = :id"
+             unit = :unit, price = :price, entry_date = :entry_date, description = :description, photo = :photo WHERE id = :id"
         )->execute($data);
     }
 

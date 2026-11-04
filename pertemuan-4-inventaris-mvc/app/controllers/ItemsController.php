@@ -52,8 +52,28 @@ class ItemsController extends Controller
             $this->redirect('items');
         }
         $input = array_map('trim', $_POST);
+
         if (empty($input['code']) || empty($input['name'])) {
             $this->flash('danger', 'Kode dan nama barang wajib diisi.');
+            $this->redirect('items/create');
+        }
+
+        $data = $this->payload($input);
+
+        if (!empty($_FILES['photo']['name'])) {
+            try {
+                $data['photo'] = Upload::image($_FILES['photo']);
+            } catch (RuntimeException $e) {
+                $this->flash('danger', 'Foto gagal diunggah: ' . $e->getMessage());
+                $this->redirect('items/create');
+            }
+        }
+        try {
+            $this->item->create($data);
+        } catch (PDOException $e) {
+            Upload::remove($data['photo']);
+            Logger::error('Create item failed', ['error' => $e->getMessage()]);
+            $this->flash('danger', 'Barang gagal disimpan. Pastikan kode barang belum dipakai.');
             $this->redirect('items/create');
         }
         $this->model('Item')->create($this->payload($input));
@@ -84,9 +104,40 @@ class ItemsController extends Controller
         }
         $input = array_map('trim', $_POST);
         $id = (int) ($input['id'] ?? 0);
+
         if ($id <= 0 || empty($input['code']) || empty($input['name'])) {
             $this->flash('danger', 'Data barang tidak valid.');
             $this->redirect('items');
+        }
+
+        //ambil data lama 
+        $current = $this->item->find($id);
+        $data = $this->payload($input);
+        $data['photo'] = $current['photo'];//penanganan foto
+        $oldPhoto = $current['photo'];
+        $newPhoto = null;
+        if (!empty($_FILES['photo']['name'])) {
+            try {
+                $newPhoto = Upload::image($_FILES['photo']);
+                $data['photo'] = $newPhoto;
+            } catch (RuntimeException $e) {
+                $this->flash('danger', 'Foto gagal diunggah: ' . $e->getMessage());
+                $this->redirect('items/edit/' . $id);
+            }
+        } elseif (!empty($input['remove_photo'])) {
+            $data['photo'] = null;//hapus foto jika checkbox di centang
+        }
+        //simpan DB dan rollback jika gagal
+        try {
+            $this->item->update($id, $data);
+        } catch (PDOException $e) {
+            Upload::remove($newPhoto);
+            $this->flash('danger', 'Barang gagal diperbarui.');
+            $this->redirect('items/edit/' . $id);
+        }
+        //bersihkan foto lama jika ada perubahan
+        if ($data['photo'] !== $oldPhoto) {
+            Upload::remove($oldPhoto);
         }
         $this->model('Item')->update($id, $this->payload($input));
         $this->flash('success', 'Barang berhasil diperbarui.');
@@ -158,6 +209,7 @@ class ItemsController extends Controller
             'price' => (float) ($input['price'] ?? 0),
             'entry_date' => ($input['entry_date'] ?? '') !== '' ? $input['entry_date'] : null,
             'description' => $input['description'] ?? '',
+            'photo' => $input['photo'] ?? null,
         ];
     }
  /**

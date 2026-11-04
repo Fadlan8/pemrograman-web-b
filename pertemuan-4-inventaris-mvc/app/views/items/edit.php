@@ -12,7 +12,7 @@
 
 <div class="card border-0 shadow-sm">
     <div class="card-body">
-        <form action="<?= BASEURL ?>/items/update" method="post">
+        <form action="<?= BASEURL ?>/items/update" method="post" enctype="multipart/form-data">
             <?= Security::csrfField() ?>
             <input type="hidden" name="id" value="<?= e($item['id']) ?>">
             <?php require ROOT_PATH . '/app/views/items/_form.php'; ?>
