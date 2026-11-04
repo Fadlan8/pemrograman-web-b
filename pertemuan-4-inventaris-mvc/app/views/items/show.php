@@ -20,7 +20,8 @@
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center">
                 <?php if (!empty($item['photo'])): ?>
-                    <img src="<?= e(asset($item['photo'])) ?>" alt="<?= e($item['name']) ?>"
+                  
+                    <img src="<?= BASEURL ?>/<?= e($item['photo']) ?>" alt="<?= e($item['name']) ?>"
                          class="img-fluid rounded mb-3" style="max-height: 220px; object-fit: cover;">
                 <?php else: ?>
                     <div class="bg-light rounded d-flex align-items-center justify-content-center mb-3"

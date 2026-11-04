@@ -48,7 +48,7 @@ $selectedCategory = $item['category_id'] ?? '';
     <small class="text-muted">Format JPG, PNG, atau WEBP. Maksimal 2 MB.</small>
     <?php if (!empty($item['photo'])): ?>
         <div class="d-flex align-items-center gap-3 mt-3">
-            <img src="<?= e(asset($item['photo'])) ?>" alt="Foto barang"
+            <img src="<?= BASEURL ?>/<?= e($item['photo']) ?>" alt="Foto barang"
                  class="rounded border" style="width: 96px; height: 96px; object-fit: cover;">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="remove_photo"

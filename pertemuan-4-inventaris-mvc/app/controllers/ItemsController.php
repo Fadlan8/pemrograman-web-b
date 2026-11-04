@@ -76,7 +76,6 @@ class ItemsController extends Controller
             $this->flash('danger', 'Barang gagal disimpan. Pastikan kode barang belum dipakai.');
             $this->redirect('items/create');
         }
-        $this->model('Item')->create($this->payload($input));
         $this->flash('success', 'Barang berhasil ditambahkan.');
         $this->redirect('items');
     }
@@ -139,7 +138,7 @@ class ItemsController extends Controller
         if ($data['photo'] !== $oldPhoto) {
             Upload::remove($oldPhoto);
         }
-        $this->model('Item')->update($id, $this->payload($input));
+
         $this->flash('success', 'Barang berhasil diperbarui.');
         $this->redirect('items');
     }
