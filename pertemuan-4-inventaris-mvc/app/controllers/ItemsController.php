@@ -2,9 +2,15 @@
 
 class ItemsController extends Controller
 {
+    private $item;
+    private $category;
+
     public function __construct()
     {
+        
         $this->requireLogin();
+        $this->item = $this->model('Item');
+        $this->category = $this->model('Category');
     }
 
     public function index(): void
