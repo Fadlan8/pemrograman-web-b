@@ -76,6 +76,14 @@ class ItemsController extends Controller
             $this->flash('danger', 'Barang gagal disimpan. Pastikan kode barang belum dipakai.');
             $this->redirect('items/create');
         }
+         // ACTIVITY LOG: Barang berhasil ditambahkan
+        $this->logActivity(
+            'item.create',
+            'item',
+            null,
+            $data['code'] . ' - ' . $data['name']
+        );
+
         $this->flash('success', 'Barang berhasil ditambahkan.');
         $this->redirect('items');
     }
@@ -138,6 +146,13 @@ class ItemsController extends Controller
         if ($data['photo'] !== $oldPhoto) {
             Upload::remove($oldPhoto);
         }
+        // ACTIVITY LOG: Barang berhasil diperbarui
+        $this->logActivity(
+            'item.update',
+            'item',
+            $id,
+            $data['code'] . ' - ' . $data['name']
+        );
 
         $this->flash('success', 'Barang berhasil diperbarui.');
         $this->redirect('items');
@@ -152,8 +167,19 @@ class ItemsController extends Controller
         if (!$id) {
             $this->redirect('items');
         }
+
         $item = $this->item->find((int) $id);
+        
         if ($item && $this->item->softDelete((int) $id)) {
+            
+            // ACTIVITY LOG: Barang berhasil dihapus (soft delete)
+            $this->logActivity(
+                'item.delete',
+                'item',
+                (int) $id,
+                $item['code'] . ' - ' . $item['name']
+            );
+
             $this->flash('success', 'Barang dipindahkan ke sampah (soft delete).');
         } else {
             $this->flash('danger', 'Barang gagal dihapus.');
@@ -161,7 +187,7 @@ class ItemsController extends Controller
         $this->redirect('items');
     }
     /**
-     * Trash bin (administrators only may restore).
+     * Trash bin (administrators only may restore)./daftar sampah barang
      */
     public function trash(): void
     {
@@ -185,11 +211,20 @@ class ItemsController extends Controller
     public function restore($id = null): void
     {
         $this->authorize('items.restore');
+
         if (!$id || !$this->item->find((int) $id, true)) {
             $this->flash('danger', 'Barang tidak ditemukan di sampah.');
             $this->redirect('items/trash');
         }
         if ($this->item->restore((int) $id)) {
+            
+            // ACTIVITY LOG: Barang berhasil dipulihkan
+            $this->logActivity(
+                'item.restore',
+                'item',
+                (int) $id,
+                 'Barang dipulihkan');
+
             $this->flash('success', 'Barang berhasil dipulihkan.');
         } else {
             $this->flash('danger', 'Barang gagal dipulihkan.');

@@ -40,6 +40,14 @@ class CategoriesController extends Controller
             'name' => $input['name'],
             'description' => $input['description'] ?? '',
         ]);
+
+        // ACTIVITY LOG: Catatan kategori berhasil dibuat
+        $this->logActivity(
+            'category.create',
+            'category',
+            null,
+        );
+
         $this->flash('success', 'Kategori berhasil ditambahkan.');
         $this->redirect('categories');
     }
@@ -74,6 +82,14 @@ class CategoriesController extends Controller
             'name' => $input['name'],
             'description' => $input['description'] ?? '',
         ]);
+
+        // ACTIVITY LOG: Catatan kategori berhasil diperbarui
+        $this->logActivity(
+            'category.update',
+            'category',
+            $id,
+        );
+
         $this->flash('success', 'Kategori berhasil diperbarui.');
         $this->redirect('categories');
     }
@@ -88,6 +104,13 @@ class CategoriesController extends Controller
         $category = $categoryModel->find((int) $id);
 
         if ($category && $categoryModel->softDelete((int) $id)) {
+
+            // ACTIVITY LOG: Catatan kategori berhasil dihapus (soft delete)
+            $this->logActivity(
+                'category.delete',
+                'category',
+                (int) $id,
+            );
             $this->flash('success', 'Kategori dipindahkan ke sampah (soft delete).');
         } else {
             $this->flash('danger', 'Kategori gagal dihapus.');

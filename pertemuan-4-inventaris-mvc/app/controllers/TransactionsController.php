@@ -52,7 +52,20 @@ class TransactionsController extends Controller
             'quantity' => $qty,
             'notes' => trim($_POST['notes'] ?? '') ?: null,
         ]);
-        $this->flash($ok ? 'success' : 'danger', $ok ? $msg : 'Gagal. Stok tidak mencukupi.');
+
+        // ACTIVITY LOG: Catatan transaksi berhasil dibuat
+        if ($result) {
+            $this->logActivity(
+                'stock.' . strtolower($type),
+                'item',
+                $itemId,
+                $type . ' ' . $quantity . ' unit'
+            );
+
+             $this->flash($successType, $successMessage);
+        }else {
+            $this->flash($result ? 'success' : 'danger', $result ? $msg : 'Gagal. Stok tidak mencukupi.');
+        }
         $this->redirect('items');
     }
 }

@@ -37,4 +37,13 @@ class Controller
     {
         Middleware::requireRole('admin');
     }
+    protected function logActivity(
+        string $action,
+        ?string $entity = null,
+        ?int $entityId = null,
+        ?string $description = null
+    ): void {
+        $userId = isset($_SESSION['user']['id']) ? (int) $_SESSION['user']['id'] : null;
+        $this->model('ActivityLog')->record($userId, $action, $entity, $entityId, $description);
+    }
 }
