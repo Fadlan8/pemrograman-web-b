@@ -154,4 +154,20 @@ class ItemsController extends Controller
             'description' => $input['description'] ?? '',
         ];
     }
+ /**
+     * Item detail with its stock movement history.
+     */
+      public function show($id = null): void
+    {
+        $this->authorize('items.view');
+        $item = $id ? $this->item->find((int) $id) : null;
+        if (!$item) {
+            Security::abort(404, 'Barang tidak ditemukan', 'Barang yang Anda cari tidak ada atau sudah dihapus.');
+        }
+        $this->view('items/show', [
+            'title'        => 'Detail Barang',
+            'item'         => $item,
+            'transactions' => $this->model('Transaction')->forItem((int) $item['id'], 20),
+        ]);
+    }
 }

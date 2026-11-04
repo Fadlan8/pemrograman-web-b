@@ -86,4 +86,19 @@ class Transaction extends Model
     {
         return (int) $this->db->query("SELECT COUNT(*) FROM transactions WHERE DATE(created_at) = CURDATE()")->fetchColumn();
     }
+  /**
+     * Transaction history for one item (detail page).
+     */
+     public function forItem(int $itemId, int $limit = 20): array
+    {
+        $sql = "SELECT t.*, u.full_name AS user_name
+                FROM transactions t
+                LEFT JOIN users u ON t.user_id = u.id
+                WHERE t.item_id = :item_id
+                ORDER BY t.created_at DESC, t.id DESC
+                LIMIT {$limit}";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['item_id' => $itemId]);
+        return $stmt->fetchAll();
+    }
 }

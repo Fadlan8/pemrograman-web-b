@@ -97,6 +97,10 @@ $showItemActions = $canAdjustStock || $canUpdateItems || $canDeleteItems;
                                 <?php if ($showItemActions): ?>
                                     <td class="text-center">
                                     <div class="btn-group btn-group-sm">
+                                        <a href="<?= BASEURL ?>/items/show/<?= e($row['id']) ?>"
+                                            class="btn btn-outline-primary" title="Detail">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
                                         <?php if ($canAdjustStock): ?>
                                             <button type="button" class="btn btn-outline-success" title="Barang Masuk" data-bs-toggle="modal" data-bs-target="#stockInModal" onclick='setStockItem(<?= json_encode($row, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
                                                 <i class="bi bi-box-arrow-in-down"></i>
