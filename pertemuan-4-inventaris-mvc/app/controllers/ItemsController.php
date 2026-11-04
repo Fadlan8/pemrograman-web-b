@@ -231,6 +231,16 @@ class ItemsController extends Controller
         }
         $this->redirect('items/trash');
     }
+    private function resolveLimit(): int
+    {
+        $limit = (int) query_param('limit', '10');
+
+        if (!in_array($limit, [5, 10, 20, 50, 100], true)) {
+            $limit = 10;
+    }
+
+    return $limit;
+}
 
     private function payload(array $input): array
     {

@@ -114,6 +114,7 @@ $showItemActions = $canAdjustStock || $canUpdateItems || $canDeleteItems;
                                         <?php endif; ?>
                                         <?php if ($canDeleteItems): ?>
                                             <form action="<?= BASEURL ?>/items/delete/<?= e($row['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Hapus barang ini?')">
+                                               <?= csrf_field() ?>
                                                 <button class="btn btn-outline-secondary" title="Hapus"><i class="bi bi-trash"></i></button>
                                             </form>
                                         <?php endif; ?>
