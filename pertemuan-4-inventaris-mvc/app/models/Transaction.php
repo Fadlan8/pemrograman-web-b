@@ -187,4 +187,33 @@ class Transaction extends Model
         ];
     }
 
+    public function dailyTotals(int $days = 7): array
+    {
+        $days = max(1, min(30, $days));
+        $sql = "SELECT DATE(created_at) AS day,
+                SUM(CASE WHEN type = 'IN' THEN quantity ELSE 0 END) AS total_in,
+                SUM(CASE WHEN type = 'OUT' THEN quantity ELSE 0 END) AS total_out
+            FROM transactions
+            WHERE created_at >= (CURDATE() - INTERVAL {$days} DAY)
+            GROUP BY DATE(created_at)
+            ORDER BY day ASC";
+        $rows = $this->db->query($sql)->fetchAll();
+
+        $byDay = [];
+        foreach ($rows as $row) {
+            $byDay[(string) $row['day']] = $row;
+        }
+        $result = [];
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $timestamp = strtotime("-{$i} day");
+            $date = date('Y-m-d', $timestamp);
+            $result[] = [
+                'label' => date('d/m', $timestamp),
+                'in' => (int) ($byDay[$date]['total_in'] ?? 0),
+                'out' => (int) ($byDay[$date]['total_out'] ?? 0),
+                ];
+        }
+        return $result;
+
+    }
 }

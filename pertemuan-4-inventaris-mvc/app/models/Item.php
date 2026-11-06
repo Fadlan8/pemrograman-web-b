@@ -146,4 +146,14 @@ class Item extends Model
         $stmt->execute($params);
         return $stmt->fetchAll();
     }
+
+    public function topStock(int $limit = 5): array
+    {
+        $sql = "SELECT name, quantity
+            FROM items
+            WHERE deleted_at IS NULL
+            ORDER BY quantity DESC
+            LIMIT {$limit}";
+        return $this->db->query($sql)->fetchAll();
+    }
 }

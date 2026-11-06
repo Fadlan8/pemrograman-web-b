@@ -12,6 +12,9 @@ class HomeController extends Controller
         $this->authorize('dashboard.view');
         $item = $this->model('Item');
         $transaction = $this->model('Transaction');
+
+        //Ambil data untuk grafik transaksi harian selama 7 hari terakhir
+        $daily = $transaction->dailyTotals(7);
         $this->view('dashboard/index', [
             'title' => 'Dashboard',
             'totalItems' => $item->totalItems(),
@@ -22,6 +25,12 @@ class HomeController extends Controller
             'lowStockItems' => $item->lowStockItems(),
             'recentTransactions' => $transaction->recent(5),
             'todayTransactions' => $transaction->todayCount(),
+
+            //tambahkan data baru 
+            'chartLabels' => array_column($daily, 'label'),
+            'chartIn' => array_column($daily, 'in'),
+            'chartOut' => array_column($daily, 'out'),
+            'topItems' => $item->topStock(5),
         ]);
     }
 }

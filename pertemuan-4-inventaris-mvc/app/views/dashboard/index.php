@@ -7,6 +7,7 @@
     </div>
 </div>
 
+//baris kartu statistik
 <div class="row g-3 mb-4">
     <div class="col-md-3">
         <div class="card border-0 shadow-sm h-100">
@@ -54,6 +55,43 @@
     </div>
 </div>
 
+//baris grafik & stok terbanyak
+<div class="row g-3 mb-3">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <i class="bi bi-bar-chart-line text-primary me-1"></i>
+                <strong>Pergerakan Stok 7 Hari</strong>
+            </div>
+            <div class="card-body">
+                <div style="position: relative; height: 260px;">
+                    <canvas id="stockChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <i class="bi bi-stack text-warning me-1"></i> <strong>Stok Terbanyak</strong>
+            </div>
+            <ul class="list-group list-group-flush">
+                <?php if (empty($topItems)): ?>
+                    <li class="list-group-item text-center text-muted py-4">Belum ada data.</li>
+                <?php else: ?>
+                    <?php foreach ($topItems as $row): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="text-truncate me-2"><?= e($row['name']) ?></span>
+                            <span class="badge bg-primary rounded-pill"><?= e($row['quantity']) ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </ul>
+        </div>
+    </div>
+</div>
+
+//3. Baris stok menipis &transaksi
 <div class="row g-3">
     <div class="col-md-6">
         <div class="card border-0 shadow-sm h-100">
@@ -127,5 +165,42 @@
         </div>
     </div>
 </div>
+
+//4.script untuk grafik
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+    const stockChartData = <?= json_encode([
+        'labels' => $chartLabels,
+        'in' => $chartIn,
+        'out' => $chartOut,
+    ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+
+    new Chart(document.getElementById('stockChart'), {
+        type: 'bar',
+        data: {
+            labels: stockChartData.labels,
+            datasets: [
+                {
+                    label: 'Masuk',
+                    data: stockChartData.in,
+                    backgroundColor: 'rgba(25, 135, 84, .75)',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Keluar',
+                    data: stockChartData.out,
+                    backgroundColor: 'rgba(220, 53, 69, .75)',
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+            plugins: { legend: { position: 'top' } }
+        }
+    });
+</script>
 
 <?php require ROOT_PATH . '/app/views/layouts/footer.php'; ?>
