@@ -120,4 +120,30 @@ class Item extends Model
              WHERE i.quantity <= 5 AND i.deleted_at IS NULL ORDER BY i.quantity ASC LIMIT 10"
         )->fetchAll();
     }
+    public function report(array $filters = []): array
+    {
+        $where = ["i.deleted_at IS NULL"];
+        $params = [];
+        if (!empty($filters['search'])) {
+            $where[] = "(i.code LIKE :search OR i.name LIKE :search)";
+            $params['search'] = '%' . $filters['search'] . '%';
+        }
+        if (!empty($filters['category'])) {
+            $where[] = "i.category_id = :category_id";
+            $params['category_id'] = (int) $filters['category'];
+        }
+        if (!empty($filters['low_stock'])) {
+            $where[] = "i.quantity <= :threshold";
+            $params['threshold'] = (int) ($filters['threshold'] ?? 5);
+        }
+        $sql = "SELECT i.code, i.name, c.name AS category_name, i.quantity, i.unit,
+                    i.price, i.entry_date
+                FROM items i
+                LEFT JOIN categories c ON i.category_id = c.id
+                WHERE " . implode(' AND ', $where) . "
+                ORDER BY i.name ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
 }

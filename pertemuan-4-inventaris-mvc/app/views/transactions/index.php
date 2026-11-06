@@ -14,6 +14,13 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <form method="get" action="<?= BASEURL ?>/transactions" class="d-flex align-items-center gap-2">
+                <div class="col-auto">
+                    <select name="type" class="form-select" onchange="this.form.submit()">
+                        <option value="">Semua Tipe</option>
+                        <option value="IN" <?= (isset($type) && $type === 'IN') ? 'selected' : '' ?>>Masuk</option>
+                        <option value="OUT" <?= (isset($type) && $type === 'OUT') ? 'selected' : '' ?>>Keluar</option>
+                    </select>
+                </div>
                 <label class="mb-0 text-muted">Tampilkan:</label>
                 <select name="limit" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
                     <?php foreach ([5, 10, 20, 50, 100] as $opt): ?>
@@ -59,7 +66,7 @@
             </table>
         </div>
 
-        <?php if ($transactions['total_pages'] > 1): $q = ['limit' => $currentLimit]; ?>
+        <?php if ($transactions['total_pages'] > 1): $q = ['limit' => $currentLimit, 'type' => $type ?? '']; ?>
             <nav class="mt-3">
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item <?= $transactions['current_page'] <= 1 ? 'disabled' : '' ?>">

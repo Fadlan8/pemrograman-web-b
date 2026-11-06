@@ -82,8 +82,7 @@
             <nav class="mt-3">
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item <?= $items['current_page'] <= 1 ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?<?= http_build_query($q + ['page' => $items['current_page'] - 1]) 
-?>">Previous</a>
+                        <a class="page-link" href="?<?= http_build_query($q + ['page' => $items['current_page'] - 1]) ?>">Previous</a>
                     </li>
                     <?php for ($i = 1; $i <= $items['total_pages']; $i++): ?>
                         <li class="page-item <?= $i === $items['current_page'] ? 'active' : '' ?>">
@@ -91,8 +90,7 @@
                         </li>
                     <?php endfor; ?>
                     <li class="page-item <?= $items['current_page'] >= $items['total_pages'] ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?<?= http_build_query($q + ['page' => $items['current_page'] + 1]) 
-?>">Next</a>
+                        <a class="page-link" href="?<?= http_build_query($q + ['page' => $items['current_page'] + 1]) ?>">Next</a>
                     </li>
                 </ul>
             </nav>

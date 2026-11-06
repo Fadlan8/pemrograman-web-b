@@ -10,15 +10,26 @@ class TransactionsController extends Controller
     public function index(): void
     {
         $this->authorize('transactions.view');
+
+        // 1. Baca parameter filter tipe dari URL
+        $type = query_param('type');
+
+        // Ambil parameter dari URL untuk paginasi
         $limit = (int) ($_GET['limit'] ?? 10);
         if (!in_array($limit, [5, 10, 20, 50, 100], true)) {
             $limit = 10;
         }
-        $page = max(1, (int) ($_GET['page'] ?? 1));
+        $page = max(1, (int) query_param('page', '1'));
+
         $this->view('transactions/index', [
             'title' => 'Riwayat Transaksi',
-            'transactions' => $this->model('Transaction')->paginate($limit, $page),
+
+            // 2. Teruskan array filter berisi 'type' ke parameter ke-3 fungsi paginate()
+            'transactions' => $this->model('Transaction')->paginate($limit, $page, ['type' => $type]),
             'currentLimit' => $limit,
+
+           // 3. Teruskan variabel type ke view agar dropdown pilihan tidak kereset
+            'type' => $type,
         ]);
     }
 

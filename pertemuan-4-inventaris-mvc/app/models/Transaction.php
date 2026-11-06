@@ -53,15 +53,43 @@ class Transaction extends Model
     public function paginate(int $limit = 10, int $page = 1): array
     {
         $offset = ($page - 1) * $limit;
-        $total = (int) $this->db->query("SELECT COUNT(*) FROM transactions")->fetchColumn();
+
+        // 1. Siapkan array untuk menampung filter
+        $where = [];
+        $params = [];
+        
+        if (!empty($filters['type']) && in_array($filters['type'], ['IN', 'OUT'], true)) {
+            $where[] = "t.type = :type";
+            $params['type'] = $filters['type'];
+        }
+        
+        if (!empty($filters['from'])) {
+            $where[] = "t.created_at >= :from";
+            $params['from'] = $filters['from'] . ' 00:00:00';
+        }
+        
+        if (!empty($filters['to'])) {
+            $where[] = "t.created_at <= :to";
+            $params['to'] = $filters['to'] . ' 23:59:59';
+        }
+        
+        $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+        
+        // 2. Ganti penghitungan $total dengan query yang mendeteksi filter
+        $countStmt = $this->db->prepare("SELECT COUNT(*) FROM transactions t {$whereSql}");
+        $countStmt->execute($params);
+        $total = (int) $countStmt->fetchColumn();
+
+        // 3. Tambahkan {$whereSql} ke dalam query utama dan jalankan execute dengan $params
         $stmt = $this->db->prepare(
             "SELECT t.*, i.code AS item_code, i.name AS item_name, u.full_name AS user_name
              FROM transactions t
              LEFT JOIN items i ON t.item_id = i.id
              LEFT JOIN users u ON t.user_id = u.id
+            {$whereSql}
              ORDER BY t.created_at DESC, t.id DESC LIMIT {$limit} OFFSET {$offset}"
         );
-        $stmt->execute();
+        $stmt->execute($params);
 
         return [
             'data' => $stmt->fetchAll(),
@@ -101,4 +129,62 @@ class Transaction extends Model
         $stmt->execute(['item_id' => $itemId]);
         return $stmt->fetchAll();
     }
+
+    public function report(string $from = '', string $to = '', string $type = ''): array
+    {
+        $where = [];
+        $params = [];
+        if ($from !== '') {
+            $where[] = "t.created_at >= :from";
+            $params['from'] = $from . ' 00:00:00';
+        }
+        if ($to !== '') {
+            $where[] = "t.created_at <= :to";
+            $params['to'] = $to . ' 23:59:59';
+        }
+        if (in_array($type, ['IN', 'OUT'], true)) {
+            $where[] = "t.type = :type";
+            $params['type'] = $type;
+        }
+        $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+        $sql = "SELECT t.created_at, i.code AS item_code, i.name AS item_name,
+                    t.type, t.quantity, u.full_name AS user_name, t.notes
+                FROM transactions t
+                LEFT JOIN items i ON t.item_id = i.id
+                LEFT JOIN users u ON t.user_id = u.id
+                {$whereSql}
+                ORDER BY t.created_at ASC, t.id ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+    public function summary(string $from = '', string $to = ''): array
+    {
+        $where = [];
+        $params = [];
+        if ($from !== '') {
+            $where[] = "created_at >= :from";
+            $params['from'] = $from . ' 00:00:00';
+        }
+        if ($to !== '') {
+            $where[] = "created_at <= :to";
+            $params['to'] = $to . ' 23:59:59';
+        }
+        $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+        $sql = "SELECT
+                    COALESCE(SUM(CASE WHEN type = 'IN'  THEN quantity ELSE 0 END), 0) AS total_in,
+                    COALESCE(SUM(CASE WHEN type = 'OUT' THEN quantity ELSE 0 END), 0) AS total_out,
+                    COUNT(*) AS total_rows
+                FROM transactions {$whereSql}";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        $row = $stmt->fetch();
+        return [
+            'total_in'   => (int) ($row['total_in'] ?? 0),
+            'total_out'  => (int) ($row['total_out'] ?? 0),
+            'total_rows' => (int) ($row['total_rows'] ?? 0),
+        ];
+    }
+
 }
