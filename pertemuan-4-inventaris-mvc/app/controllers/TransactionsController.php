@@ -73,9 +73,11 @@ class TransactionsController extends Controller
                 $type . ' ' . $quantity . ' unit'
             );
 
-             $this->flash($successType, $successMessage);
+             // 2. Set pesan sukses (warna hijau)
+            $msg = ($type === 'IN') ? 'Stok berhasil ditambahkan.' : 'Stok berhasil dikurangi.';
+            $this->flash('success', $msg);
         }else {
-            $this->flash($result ? 'success' : 'danger', $result ? $msg : 'Gagal. Stok tidak mencukupi.');
+            $this->flash('danger','Gagal. Stok tidak mencukupi.');
         }
         $this->redirect('items');
     }
