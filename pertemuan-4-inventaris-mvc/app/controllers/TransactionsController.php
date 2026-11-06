@@ -65,7 +65,7 @@ class TransactionsController extends Controller
         ]);
 
         // ACTIVITY LOG: Catatan transaksi berhasil dibuat
-        if ($result) {
+        if ($ok) {
             $this->logActivity(
                 'stock.' . strtolower($type),
                 'item',

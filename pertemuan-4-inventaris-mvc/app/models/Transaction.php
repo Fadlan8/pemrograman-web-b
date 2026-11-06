@@ -50,7 +50,7 @@ class Transaction extends Model
         }
     }
 
-    public function paginate(int $limit = 10, int $page = 1): array
+    public function paginate(int $limit = 10, int $page = 1, array $filters = []): array
     {
         $offset = ($page - 1) * $limit;
 
