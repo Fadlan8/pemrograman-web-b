@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Home</title>
+
+
+    <!-- BOOTSTRAP -->
+    <link 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+    <!-- BOOTSTRAP ICON -->
+    <link 
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+
+    <style>
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 65px;
+            height: 100vh;
+
+            position: fixed;
+            top: 0;
+            left: 0;
+
+           
+
+            transition: 0.3s;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+
+        /* SIDEBAR SAAT MOUSE DIARAHKAN */
+
+        .sidebar:hover {
+            width: 230px;
+        }
+
+        /* SEARCH DISEMBUNYIKAN */
+        .search-box {
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        /* SEARCH MUNCUL SAAT SIDEBAR DILEBARKAN */
+        .sidebar:hover .search-box {
+            opacity: 1;
+        }
+
+
+        /* TEXT MENU */
+
+        .menu-text {
+            opacity: 0;
+
+            white-space: nowrap;
+
+            transition: 0.2s;
+        }
+
+        /* TEXT MUNCUL */
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
+        }
+
+
+        /* ICON */
+
+        .menu-icon {
+            min-width: 25px;
+
+            font-size: 18px;
+        }
+
+
+        /* LOGO */
+
+        .logo-text {
+            opacity: 0;
+
+            white-space: nowrap;
+
+            transition: 0.2s;
+        }
+
+
+        .sidebar:hover .logo-text {
+            opacity: 1;
+        }
+
+
+        /* CONTENT */
+
+        .content {
+            margin-left: 65px;
+        }
+
+    </style>
+
+</head>
+
+
+<body class="bg-white">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <div class="sidebar bg-light border-end">
+
+
+        <!-- LOGO -->
+
+        <div class="d-flex align-items-center gap-3 p-3">
+
+            <i class="bi bi-sun-fill text-warning fs-4"></i>
+
+            <span class="logo-text fw-bold">
+                Fadlan Olshop
+            </span>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box px-2 mt-2 mb-3">
+
+            <input 
+                type="text"
+                class="form-control"
+                placeholder="Search">
+
+        </div>
+
+
+        <!-- MENU -->
+
+        <div class="px-2">
+
+
+            <small class="text-secondary menu-text">
+                My account
+            </small>
+
+
+            <!-- HOME -->
+
+            <a 
+                href="home.html"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-2">
+
+                <i class="bi bi-house menu-icon"></i>
+
+                <span class="menu-text">
+                    Home
+                </span>
+
+            </a>
+
+
+            <!-- DASHBOARD -->
+
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-1">
+
+                <i class="bi bi-grid menu-icon"></i>
+
+                <span class="menu-text">
+                    Dashboard
+                </span>
+
+                <span class="menu-text ms-auto">
+                    +
+                </span>
+
+            </a>
+
+
+            <!-- PROJECTS -->
+
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-1">
+
+                <i class="bi bi-folder menu-icon"></i>
+
+                <span class="menu-text">
+                    Projects
+                </span>
+
+                <span class="menu-text ms-auto">
+                    +
+                </span>
+
+            </a>
+
+
+            <!-- TASK -->
+
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-1">
+
+                <i class="bi bi-check-square menu-icon"></i>
+
+                <span class="menu-text">
+                    Task
+                </span>
+
+                <span class="menu-text ms-auto">
+                    +
+                </span>
+
+            </a>
+
+
+            <!-- SETTINGS -->
+
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark rounded p-2 mt-1">
+
+                <i class="bi bi-gear menu-icon"></i>
+
+                <span class="menu-text">
+                    Settings
+                </span>
+
+                <span class="menu-text ms-auto">
+                    +
+                </span>
+
+            </a>
+
+
+            <!-- SUB MENU -->
+
+            <div class="ms-5 menu-text">
+
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
+
+                    My details
+
+                </a>
+
+
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
+
+                    My profile
+
+                </a>
+
+
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
+
+                    Security
+
+                </a>
+
+
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
+
+                    Integrations
+
+                </a>
+
+
+                <a 
+                    href="#"
+                    class="d-block text-secondary text-decoration-none py-1">
+
+                    Billing
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div class="position-absolute bottom-0 w-100 p-2">
+
+            <a 
+                href="#"
+                class="d-flex align-items-center gap-3 text-decoration-none text-dark p-2">
+
+                <i class="bi bi-chat menu-icon"></i>
+
+                <span class="menu-text">
+                    Messages
+                </span>
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- CONTENT -->
+
+    <div class="content p-5">
+
+        <h1 class="display-4">
+            Home
+        </h1>
+
+        <p class="text-secondary">
+            Welcome to Fadlan Olshop.
+        </p>
+
+    </div>
+
+
+    <!-- BOOTSTRAP JS -->
+
+    <script 
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+</body>
+
+</html>
